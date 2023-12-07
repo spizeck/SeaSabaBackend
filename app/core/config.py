@@ -1,9 +1,14 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
+import os
+from pathlib import Path
 
 class Settings(BaseSettings):
-    database_url: str = 'postgresql://postgres:SeeD0409!@localhost:5432/SeaSaba'
-    secret_key: str = 'insert_a_very_secret_key_here'
-    algorithm: str = 'HS256'
-    access_token_expire_minutes: int = 60
+    database_url: str
+    secret_key: str
+    algorithm: str
+    access_token_expire_minutes: int 
     
+    class Config:
+        env_file = os.path.join(Path(__file__).parent.parent.parent.absolute(), '.env')
+        
 settings = Settings()
