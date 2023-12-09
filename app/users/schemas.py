@@ -1,19 +1,24 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from datetime import datetime
+
 
 class UserCreate(BaseModel):
     username: str
     email: EmailStr
     password: str
-    
+
+
 class UserProfile(BaseModel):
     first_name: str
     last_name: str
     phone_number: str
     company_name: str
-    
+
+
 class UserPreferences(BaseModel):
     pass
+
 
 class UpdateUser(BaseModel):
     username: Optional[str] = None
@@ -23,6 +28,7 @@ class UpdateUser(BaseModel):
     last_name: Optional[str] = None
     phone_number: Optional[str] = None
     company_name: Optional[str] = None
+
 
 class User(BaseModel):
     id: int
@@ -35,5 +41,9 @@ class User(BaseModel):
     class Config:
         from_attributes = True
 
+
 class TokenData(BaseModel):
     username: str
+    exp: datetime
+
+# TODO: Add validation logic for the username and email fields (e.g., length, format, forbidden characters).

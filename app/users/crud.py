@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from app.users.models import User, UserProfile, UserPreferences
 from app.users.schemas import UserCreate, UpdateUser
-from app.core.security import get_password_hash, verify_password, create_access_token, get_current_user
+from app.core.security import get_password_hash
 
 
 def get_user(db: Session, user_id: int):
@@ -9,21 +9,11 @@ def get_user(db: Session, user_id: int):
 
 
 def get_user_by_email(db: Session, email: str):
-    db_user = db.query(User).filter(User.email == email).first()
-    if db_user is None:
-        return None
-    if not verify_password(email=email, hashed_password=db_user.hashed_password):
-        return None
-    return db_user
+    return db.query(User).filter(User.email == email).first()
 
 
 def get_user_by_username(db: Session, username: str):
-    db_user = db.query(User).filter(User.username == username).first()
-    if db_user is None:
-        return None
-    if not verify_password(username=username, hashed_password=db_user.hashed_password):
-        return None
-    return db_user
+    return db.query(User).filter(User.username == username).first()
 
 
 def create_user(db: Session, user: UserCreate):
@@ -44,7 +34,10 @@ def create_user(db: Session, user: UserCreate):
     db.refresh(db_profile)
     db.refresh(db_preferences)
 
+    # TODO: Implement account activation workflow using the is_active field in the User model.
+
     return db_user
+
 
 def delete_user(db: Session, user_id: int):
     db_user = db.query(User).filter(User.id == user_id).first()
