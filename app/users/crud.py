@@ -1,9 +1,7 @@
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
 from app.users.models import User, UserProfile, UserPreferences
 from app.users.schemas import UserCreate, UpdateUser
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from app.core.security import get_password_hash, verify_password, create_access_token, get_current_user
 
 
 def get_user(db: Session, user_id: int):
@@ -11,15 +9,25 @@ def get_user(db: Session, user_id: int):
 
 
 def get_user_by_email(db: Session, email: str):
-    return db.query(User).filter(User.email == email).first()
+    db_user = db.query(User).filter(User.email == email).first()
+    if db_user is None:
+        return None
+    if not verify_password(email=email, hashed_password=db_user.hashed_password):
+        return None
+    return db_user
 
 
 def get_user_by_username(db: Session, username: str):
-    return db.query(User).filter(User.username == username).first()
+    db_user = db.query(User).filter(User.username == username).first()
+    if db_user is None:
+        return None
+    if not verify_password(username=username, hashed_password=db_user.hashed_password):
+        return None
+    return db_user
 
 
 def create_user(db: Session, user: UserCreate):
-    hashed_password = pwd_context.hash(user.password)
+    hashed_password = get_password_hash(user.password)
     db_user = User(username=user.username, email=user.email,
                    hashed_password=hashed_password)
     db.add(db_user)
@@ -38,11 +46,6 @@ def create_user(db: Session, user: UserCreate):
 
     return db_user
 
-
-def check_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
 def delete_user(db: Session, user_id: int):
     db_user = db.query(User).filter(User.id == user_id).first()
     if db_user:
@@ -58,7 +61,7 @@ def update_user(db: Session, db_user: User, user_update: UpdateUser):
     if user_update.email is not None:
         db_user.email = user_update.email
     if user_update.password is not None:
-        db_user.hashed_password = pwd_context.hash(user_update.password)
+        db_user.hashed_password = get_password_hash(user_update.password)
 
     db_profile = db.query(UserProfile).filter(
         UserProfile.user_id == db_user.id).first()

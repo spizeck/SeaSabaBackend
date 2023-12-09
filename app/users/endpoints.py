@@ -22,6 +22,7 @@ def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
         )
     return create_user(db=db, user=user)
 
+
 @router.get("/users/{user_id}/", response_model=User, tags=["User Operations"])
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = get_user(db=db, user_id=user_id)
@@ -31,6 +32,29 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
             detail="User not found"
         )
     return db_user
+
+
+@router.get("/users/email/{email}/", response_model=User, tags=["User Operations"])
+def read_user_by_email(email: str, db: Session = Depends(get_db)):
+    db_user = get_user_by_email(db=db, email=email)
+    if db_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    return db_user
+
+
+@router.get("/users/username/{username}/", response_model=User, tags=["User Operations"])
+def read_user_by_username(username: str, db: Session = Depends(get_db)):
+    db_user = get_user_by_username(db=db, username=username)
+    if db_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    return db_user
+
 
 @router.put("/users/{user_id}/", response_model=User, tags=["User Operations"])
 def update_user_endpoint(user_id: int, user_update: UpdateUser, db: Session = Depends(get_db)):
@@ -42,6 +66,7 @@ def update_user_endpoint(user_id: int, user_update: UpdateUser, db: Session = De
         )
     updated_user = update_user(db=db, db_user=db_user, user_update=user_update)
     return updated_user
+
 
 @router.delete("/users/{user_id}/", response_model=bool, tags=["User Operations"])
 def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)):

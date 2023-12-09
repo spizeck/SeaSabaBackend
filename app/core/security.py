@@ -6,13 +6,10 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from app.core.config import settings
-from app.users import crud  # Import your CRUD operations
-from app.users.schemas import TokenData  # Import or define necessary Pydantic schemas
-from app.users.models import User  # Import your User model
-from app.dependencies import get_db  # Import your database dependency
+from app.users import crud 
+from app.dependencies import get_db  
+from app.users.schemas import TokenData
 
-# to get a string like this run:
-# openssl rand -hex 32
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes

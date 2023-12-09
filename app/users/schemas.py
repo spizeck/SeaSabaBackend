@@ -34,3 +34,6 @@ class User(BaseModel):
 
     class Config:
         from_attributes = True
+
+class TokenData(BaseModel):
+    username: str
