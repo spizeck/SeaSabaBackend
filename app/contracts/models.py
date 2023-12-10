@@ -108,6 +108,8 @@ class GroupContract(Base):
     travel_agent = Column(String, nullable=True)
     contract = Column(String)
     hotel = relationship('Hotel', back_populates='group_contracts')
+    diving_package_id = Column(Integer, ForeignKey('diving_packages.id'))
+    diving_package = relationship('DivingPackage')
 
 
 class Season(Base):
