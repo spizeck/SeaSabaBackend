@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, validator
 from typing import Optional
 from datetime import datetime
 
@@ -7,6 +7,15 @@ class UserCreate(BaseModel):
     username: str
     email: EmailStr
     password: str
+
+    @validator('username')
+    def username_alphanumeric(cls, v):
+        if not v.isalnum():
+            raise ValueError('Username must be alphanumeric')
+        return v
+
+
+    # TODO: Add validation logic for the username and email fields (e.g., length, format, forbidden characters).
 
 
 class UserProfile(BaseModel):
@@ -45,5 +54,3 @@ class User(BaseModel):
 class TokenData(BaseModel):
     username: str
     exp: datetime
-
-# TODO: Add validation logic for the username and email fields (e.g., length, format, forbidden characters).
