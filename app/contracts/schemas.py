@@ -10,6 +10,7 @@ class HotelBase(BaseModel):
     contact_info: Optional[str] = None
     amenities: Optional[str] = None
     policies: Optional[str] = None
+    foc_slots: Optional[int] = None
 
 class OccupancyRateBase(BaseModel):
     occupancy_type: str  # e.g., 'single', 'double'
@@ -17,8 +18,6 @@ class OccupancyRateBase(BaseModel):
 
 class RoomRateBase(BaseModel):
     rate: float
-    foc_diving: int
-    foc_accommodation: int
 
 class RoomTypeBase(BaseModel):
     name: str
@@ -37,6 +36,7 @@ class SeasonBase(BaseModel):
 class DivingPackageBase(BaseModel):
     name: str
     price: float
+    foc_slots: Optional[int] = 0
 
 class SpecialOfferBase(BaseModel):
     name: str

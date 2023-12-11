@@ -32,14 +32,14 @@ Ensure you have the following installed:
 
 ### Installation
 
-1. Clone the repository: ```git clone https://github.com/spizeck/SeaSabaBackend```
-2. Navigate to the backend directory: ```cd path/to/backend```
-3. Install the required packages: ```pip install -r requirements.txt```
+1. Clone the repository: `git clone https://github.com/spizeck/SeaSabaBackend`
+2. Navigate to the backend directory: `cd path/to/backend`
+3. Install the required packages: `pip install -r requirements.txt`
 
    
 ### Running the Development Server
 
-To start the FastAPI development server, run: ```uvicorn app.main:app --reload```
+To start the FastAPI development server, run: `uvicorn app.main:app --reload`
 
 The `--reload` flag enables auto-reloading of the server upon changes to the code.
 

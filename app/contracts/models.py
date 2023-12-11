@@ -13,6 +13,7 @@ class Hotel(Base):
     contact_info = Column(String)
     amenities = Column(String)
     policies = Column(String)
+    foc_slots = Column(Integer)
 
     meal_options = relationship('MealOption', back_populates='hotel')
     room_types = relationship('RoomType', back_populates='hotel')
@@ -74,6 +75,7 @@ class DivingPackage(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     price = Column(Float)
+    foc_slots = Column(Integer, default=0)
 
 
 class SpecialOffer(Base):
@@ -128,4 +130,11 @@ room_type_occupancy_rate_association = Table(
     'room_type_occupancy_rate_association', Base.metadata,
     Column('room_type_id', ForeignKey('room_types.id')),
     Column('occupancy_rate_id', ForeignKey('occupancy_rates.id'))
+)
+
+diving_package_season_association = Table(
+    'diving_package_season_association', Base.metadata,
+    Column('diving_package_id', ForeignKey('diving_packages.id')),
+    Column('season_id', ForeignKey('seasons.id')),
+    Column('foc_terms', Integer)  # FOC terms for this package in this season
 )
