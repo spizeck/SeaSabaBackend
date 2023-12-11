@@ -87,6 +87,7 @@ classDiagram
       +String contact_info
       +String amenities
       +String policies
+      +Integer foc_accommodation
     }
     class RoomType {
       +String name
@@ -98,8 +99,6 @@ classDiagram
     }
     class RoomRate {
       +Float rate
-      +Integer foc_diving
-      +Integer foc_accommodation
     }
     class MealOption {
       +String name
@@ -114,6 +113,7 @@ classDiagram
     class DivingPackage {
       +String name
       +Float price
+      +Integer foc_diving
     }
     class SpecialOffer {
       +String name

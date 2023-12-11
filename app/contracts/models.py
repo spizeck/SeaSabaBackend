@@ -9,11 +9,11 @@ class Hotel(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     location = Column(String)
-    description = Column(String)
-    contact_info = Column(String)
-    amenities = Column(String)
-    policies = Column(String)
-    foc_slots = Column(Integer)
+    description = Column(String, nullable=True)
+    contact_info = Column(String, nullable=True)
+    amenities = Column(String, nullable=True)
+    policies = Column(String, nullable=True)
+    foc_slots = Column(Integer, nullable=True)
 
     meal_options = relationship('MealOption', back_populates='hotel')
     room_types = relationship('RoomType', back_populates='hotel')
@@ -30,7 +30,7 @@ class MealOption(Base):
     id = Column(Integer, primary_key=True, index=True)
     hotel_id = Column(Integer, ForeignKey('hotels.id'))
     name = Column(String, index=True)
-    description = Column(String)
+    description = Column(String, nullable=True)
     price = Column(Float)
     hotel = relationship('Hotel', back_populates='meal_options')
 
@@ -41,7 +41,7 @@ class RoomType(Base):
     id = Column(Integer, primary_key=True, index=True)
     hotel_id = Column(Integer, ForeignKey('hotels.id'))
     name = Column(String, index=True)
-    number_of_rooms = Column(Integer)
+    number_of_rooms = Column(Integer, nullable=True)
     hotel = relationship('Hotel', back_populates='room_types')
     occupancy_rates = relationship(
         'OccupancyRate', secondary='room_type_occupancy_rate_association')
@@ -55,8 +55,6 @@ class RoomRate(Base):
     room_type_id = Column(Integer, ForeignKey('room_types.id'))
     season_id = Column(Integer, ForeignKey('seasons.id'))
     rate = Column(Float)
-    foc_diving = Column(Integer)  # FOC for diving
-    foc_accommodation = Column(Integer)  # FOC for accommodation
     room_type = relationship('RoomType', back_populates='room_rates')
     season = relationship('Season', back_populates='room_rates')
 
@@ -136,5 +134,5 @@ diving_package_season_association = Table(
     'diving_package_season_association', Base.metadata,
     Column('diving_package_id', ForeignKey('diving_packages.id')),
     Column('season_id', ForeignKey('seasons.id')),
-    Column('foc_terms', Integer)  # FOC terms for this package in this season
+    Column('foc_terms', Integer)
 )
