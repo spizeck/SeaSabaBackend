@@ -19,7 +19,7 @@ def get_diving_package(db : Session, diving_package_id: int):
     return db.query(models.DivingPackage).filter(models.DivingPackage.id == diving_package_id).first()
 
 def get_diving_packages(db : Session, skip: int = 0, limit: int = 100):
-    return db.query(models.DivingPackage).filter(models.DivingPackage).offset(skip).limit(limit).all()
+    return db.query(models.DivingPackage).offset(skip).limit(limit).all()
 
 def create_diving_package(db : Session, diving_package : schemas.DivingPackageCreate):
     db_diving_package = models.DivingPackage(**diving_package.model_dump())
@@ -45,7 +45,7 @@ def get_room_rate(db : Session, room_rate_id: int):
     return db.query(models.RoomRate).filter(models.RoomRate.id == room_rate_id).first()
 
 def get_room_rates(db : Session, hotel_id: int, skip: int = 0, limit: int = 100):
-    return db.query(models.RoomRate).filter(models.RoomRate).filter(models.RoomRate.hotel_id == hotel_id).offset(skip).limit(limit).all()
+    return db.query(models.RoomRate).filter(models.RoomRate.hotel_id == hotel_id).offset(skip).limit(limit).all()
 
 def create_room_rate(db : Session, room_rate : schemas.RoomRateCreate, hotel_id: int):
     db_room_rate = models.RoomRate(**room_rate.model_dump(), hotel_id=hotel_id)
@@ -71,7 +71,7 @@ def get_special_offer(db : Session, special_offer_id : int):
     return db.query(models.SpecialOffer).filter(models.SpecialOffer.id == special_offer_id).first()
     
 def get_special_offers(db : Session, hotel_id: int, skip: int = 0, limit: int = 100):
-    return db.query(models.SpecialOffer).filter(models.SpecialOffer).filter(models.SpecialOffer.hotel_id == hotel_id).offset(skip).limit(limit).all()
+    return db.query(models.SpecialOffer).filter(models.SpecialOffer.hotel_id == hotel_id).offset(skip).limit(limit).all()
 
 def create_special_offer(db : Session, special_offer : schemas.SpecialOfferCreate, hotel_id: int):
     db_special_offer = models.SpecialOffer(**special_offer.model_dump())
@@ -84,7 +84,7 @@ def get_booking_policy(db : Session, booking_policy_id : int):
     return db.query(models.BookingPolicy).filter(models.BookingPolicy.id == booking_policy_id).first()
     
 def get_booking_policies(db : Session, hotel_id: int, skip: int = 0, limit: int = 100):
-    return db.query(models.BookingPolicy).filter(models.BookingPolicy).filter(models.BookingPolicy.hotel_id == hotel_id).offset(skip).limit(limit).all()
+    return db.query(models.BookingPolicy).filter(models.BookingPolicy.hotel_id == hotel_id).offset(skip).limit(limit).all()
     
 def create_booking_policy(db : Session, booking_policy : schemas.BookingPolicyCreate, hotel_id: int):
     db_booking_policy = models.BookingPolicy(**booking_policy.model_dump())
@@ -97,7 +97,7 @@ def get_season(db : Session, season_id : int):
     return db.query(models.Season).filter(models.Season.id == season_id).first()
     
 def get_seasons(db : Session, hotel_id: int, skip: int = 0, limit: int = 100):
-    return db.query(models.Season).filter(models.Season).filter(models.Season.hotel_id == hotel_id).offset(skip).limit(limit).all()
+    return db.query(models.Season).filter(models.Season.hotel_id == hotel_id).offset(skip).limit(limit).all()
     
 def create_season(db : Session, season : schemas.SeasonCreate, hotel_id: int):
     db_season = models.Season(**season.model_dump())
@@ -110,7 +110,7 @@ def get_occupancy_rate(db : Session, occupancy_rate_id : int):
     return db.query(models.OccupancyRate).filter(models.OccupancyRate.id == occupancy_rate_id).first()
     
 def get_occupancy_rates(db : Session, hotel_id: int, skip: int = 0, limit: int = 100):
-    return db.query(models.OccupancyRate).filter(models.OccupancyRate).filter(models.OccupancyRate.hotel_id == hotel_id).offset(skip).limit(limit).all()
+    return db.query(models.OccupancyRate).filter(models.OccupancyRate.hotel_id == hotel_id).offset(skip).limit(limit).all()
     
 def create_occupancy_rate(db : Session, occupancy_rate : schemas.OccupancyRateCreate, hotel_id: int):
     db_occupancy_rate = models.OccupancyRate(**occupancy_rate.model_dump())
