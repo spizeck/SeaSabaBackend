@@ -5,10 +5,10 @@ from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from app.core.config import settings
-from app.users import crud
-from app.dependencies import get_db
-from app.users.schemas import TokenData
+from config import settings
+from ..users import crud
+from ..dependencies import get_db
+from ..users.schemas import TokenData
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm

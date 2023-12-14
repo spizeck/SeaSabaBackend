@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.contracts import models, schemas
+from . import models, schemas
 from datetime import datetime
 
 
