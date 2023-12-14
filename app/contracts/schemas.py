@@ -2,8 +2,6 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import date
 
-# Base schemas for simple fields
-
 
 class HotelBase(BaseModel):
     name: str
@@ -76,9 +74,6 @@ class SeasonBase(BaseModel):
     end_date: date
 
 
-# Create Schemas (for POST requests)
-
-
 class HotelCreate(HotelBase):
     pass
 
@@ -99,9 +94,6 @@ class GroupContractCreate(GroupContractBase):
     pass
 
 
-# ... similarly create 'Create' schemas for other models ...
-
-# Full Schemas with Relationships
 class OccupancyRate(OccupancyRateBase):
     id: int
 
@@ -156,5 +148,3 @@ class Hotel(HotelBase):
     booking_policies: List[BookingPolicy]
     group_contracts: List[GroupContract]
     seasons: List[Season]
-
-# ... other full schemas if needed ...

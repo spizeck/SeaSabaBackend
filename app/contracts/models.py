@@ -17,11 +17,9 @@ class Hotel(Base):
 
     meal_options = relationship('MealOption', back_populates='hotel')
     room_types = relationship('RoomType', back_populates='hotel')
-    meal_packages = relationship('MealPackage', back_populates='hotel')
     special_offers = relationship('SpecialOffer', back_populates='hotel')
     booking_policies = relationship('BookingPolicy', back_populates='hotel')
     group_contracts = relationship('GroupContract', back_populates='hotel')
-    seasons = relationship('Season', back_populates='hotel')
 
 
 class MealOption(Base):
@@ -65,6 +63,11 @@ class OccupancyRate(Base):
     id = Column(Integer, primary_key=True, index=True)
     occupancy_type = Column(String)  # e.g., 'single', 'double', etc.
     rate = Column(Float)
+    room_types = relationship(
+        'RoomType',
+        secondary='room_type_occupancy_rate_association',
+        back_populates='occupancy_rates'
+    )
 
 
 class DivingPackage(Base):
@@ -74,6 +77,11 @@ class DivingPackage(Base):
     name = Column(String, index=True)
     price = Column(Float)
     foc_slots = Column(Integer, default=0)
+    seasons = relationship(
+        'Season',
+        secondary='diving_package_season_association',
+        back_populates='diving_packages'
+    )
 
 
 class SpecialOffer(Base):
@@ -122,6 +130,11 @@ class Season(Base):
     end_date = Column(Date)
     hotel = relationship('Hotel', back_populates='seasons')
     room_rates = relationship('RoomRate', back_populates='season')
+    diving_packages = relationship(
+        'DivingPackage',
+        secondary='diving_package_season_association',
+        back_populates='seasons'
+    )
 
 
 room_type_occupancy_rate_association = Table(
