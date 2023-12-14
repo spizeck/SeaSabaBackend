@@ -13,7 +13,7 @@ class Hotel(Base):
     contact_info = Column(String, nullable=True)
     amenities = Column(String, nullable=True)
     policies = Column(String, nullable=True)
-    
+
     meal_options = relationship('MealOption', back_populates='hotel')
     room_types = relationship('RoomType', back_populates='hotel')
     special_offers = relationship('SpecialOffer', back_populates='hotel')
@@ -39,7 +39,7 @@ class RoomType(Base):
     hotel_id = Column(Integer, ForeignKey('hotels.id'))
     name = Column(String, index=True)
     number_of_rooms = Column(Integer, nullable=True)
-    
+
     hotel = relationship('Hotel', back_populates='room_types')
     occupancy_rates = relationship(
         'OccupancyRate')
@@ -53,7 +53,7 @@ class OccupancyRate(Base):
     season_id = Column(Integer, ForeignKey('seasons.id'))
     occupancy_type = Column(String)  # e.g., 'single', 'double', etc.
     rate = Column(Float)
-    
+
     room_type = relationship('RoomType', back_populates='occupancy_rates')
     season = relationship('Season', back_populates='occupancy_rates')
 
@@ -65,7 +65,7 @@ class DivingPackage(Base):
     season_id = Column(Integer, ForeignKey('seasons.id'))
     name = Column(String, index=True)
     price = Column(Float)
-    
+
     seasons = relationship('Season', back_populates='diving_packages')
 
 
@@ -115,7 +115,7 @@ class Season(Base):
     end_date = Column(Date)
     hotel_foc_slots = Column(String, nullable=True)
     diving_foc_slots = Column(String, nullable=True)
-    
+
     hotel = relationship('Hotel', back_populates='seasons')
     occupancy_rates = relationship('OccupancyRate', back_populates='season')
     diving_packages = relationship('DivingPackage', back_populates='season')

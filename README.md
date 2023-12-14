@@ -96,6 +96,8 @@ classDiagram
     class OccupancyRate {
       +String occupancy_type
       +Float rate
+      +Integer room_type_id
+      +Integer season_id
     }
     class MealOption {
       +String name
@@ -139,4 +141,5 @@ classDiagram
     Season "1" -- "0..*" OccupancyRate : has
     Season "1" -- "0..*" DivingPackage : has
     DivingPackage "*" -- "1" Season : belongs to
+    Note: OccupancyRate is a child of both RoomType and Season.
 ```

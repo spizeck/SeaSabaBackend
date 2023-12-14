@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import date
 
+
 # Base Schemas
 
 
@@ -72,6 +73,7 @@ class SeasonBase(BaseModel):
     hotel_foc_slots: Optional[str] = None
     diving_foc_slots: Optional[str] = None
 
+
 # Create Schemas
 
 
@@ -109,6 +111,7 @@ class GroupContractCreate(GroupContractBase):
 
 class SeasonCreate(SeasonBase):
     pass
+
 
 # Extended Schemas with IDs
 

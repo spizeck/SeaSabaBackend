@@ -59,7 +59,7 @@ def get_meal_options(db: Session, hotel_id: int, skip: int = 0, limit: int = 100
     return db.query(models.MealOption).filter(models.MealOption.hotel_id == hotel_id).offset(skip).limit(limit).all()
 
 
-def create_meal_option(db: Session, meal_options: schemas.MealOptionCreate, hotel_id: int):
+def create_meal_option(db: Session, meal_options: schemas.MealOptionCreate):
     db_meal_options = models.MealOption(**meal_options.model_dump())
     db.add(db_meal_options)
     db.commit()
@@ -72,10 +72,11 @@ def get_special_offer(db: Session, special_offer_id: int):
 
 
 def get_special_offers(db: Session, hotel_id: int, skip: int = 0, limit: int = 100):
-    return db.query(models.SpecialOffer).filter(models.SpecialOffer.hotel_id == hotel_id).offset(skip).limit(limit).all()
+    return db.query(models.SpecialOffer).filter(models.SpecialOffer.hotel_id == hotel_id).offset(skip).limit(
+        limit).all()
 
 
-def create_special_offer(db: Session, special_offer: schemas.SpecialOfferCreate, hotel_id: int):
+def create_special_offer(db: Session, special_offer: schemas.SpecialOfferCreate):
     db_special_offer = models.SpecialOffer(**special_offer.model_dump())
     db.add(db_special_offer)
     db.commit()
@@ -88,10 +89,11 @@ def get_booking_policy(db: Session, booking_policy_id: int):
 
 
 def get_booking_policies(db: Session, hotel_id: int, skip: int = 0, limit: int = 100):
-    return db.query(models.BookingPolicy).filter(models.BookingPolicy.hotel_id == hotel_id).offset(skip).limit(limit).all()
+    return db.query(models.BookingPolicy).filter(models.BookingPolicy.hotel_id == hotel_id).offset(skip).limit(
+        limit).all()
 
 
-def create_booking_policy(db: Session, booking_policy: schemas.BookingPolicyCreate, hotel_id: int):
+def create_booking_policy(db: Session, booking_policy: schemas.BookingPolicyCreate):
     db_booking_policy = models.BookingPolicy(**booking_policy.model_dump())
     db.add(db_booking_policy)
     db.commit()
@@ -107,7 +109,7 @@ def get_seasons(db: Session, hotel_id: int, skip: int = 0, limit: int = 100):
     return db.query(models.Season).filter(models.Season.hotel_id == hotel_id).offset(skip).limit(limit).all()
 
 
-def create_season(db: Session, season: schemas.SeasonCreate, hotel_id: int):
+def create_season(db: Session, season: schemas.SeasonCreate):
     db_season = models.Season(**season.model_dump())
     db.add(db_season)
     db.commit()
@@ -120,10 +122,10 @@ def get_occupancy_rate(db: Session, occupancy_rate_id: int):
 
 
 def get_occupancy_rates(db: Session, room_type_id: int, season_id: int, skip: int = 0, limit: int = 100):
-    return db.query(models.OccupancyRate)\
-             .filter(models.OccupancyRate.room_type_id == room_type_id)\
-             .filter(models.OccupancyRate.season_id == season_id)\
-             .offset(skip).limit(limit).all()
+    return db.query(models.OccupancyRate) \
+        .filter(models.OccupancyRate.room_type_id == room_type_id) \
+        .filter(models.OccupancyRate.season_id == season_id) \
+        .offset(skip).limit(limit).all()
 
 
 def create_occupancy_rate(db: Session, occupancy_rate: schemas.OccupancyRateCreate):
