@@ -79,6 +79,7 @@ To help visualize the relationships between different entities in our applicatio
 Below is the Mermaid chart showing the relationships among our models:
 
 ```mermaid
+
 classDiagram
     class Hotel {
       +String name
@@ -87,7 +88,6 @@ classDiagram
       +String contact_info
       +String amenities
       +String policies
-      +Integer foc_accommodation
     }
     class RoomType {
       +String name
@@ -95,9 +95,6 @@ classDiagram
     }
     class OccupancyRate {
       +String occupancy_type
-      +Float rate
-    }
-    class RoomRate {
       +Float rate
     }
     class MealOption {
@@ -109,11 +106,12 @@ classDiagram
       +String name
       +Date start_date
       +Date end_date
+      +String hotel_foc_slots
+      +String diving_foc_slots
     }
     class DivingPackage {
       +String name
       +Float price
-      +Integer foc_diving
     }
     class SpecialOffer {
       +String name
@@ -136,9 +134,9 @@ classDiagram
     Hotel "1" -- "0..*" SpecialOffer : has
     Hotel "1" -- "0..*" BookingPolicy : has
     Hotel "1" -- "0..*" Season : has
-    RoomType "1" -- "0..*" RoomRate : has
-    RoomType "*" -- "*" OccupancyRate : has
-    Season "1" -- "0..*" RoomRate : influences
-    GroupContract "1" -- "1" Hotel : belongs to
-    GroupContract "1" -- "1" DivingPackage : selects
+    Hotel "1" -- "0..*" GroupContract : has
+    RoomType "1" -- "0..*" OccupancyRate : has
+    Season "1" -- "0..*" OccupancyRate : has
+    Season "1" -- "0..*" DivingPackage : has
+    DivingPackage "*" -- "1" Season : belongs to
 ```

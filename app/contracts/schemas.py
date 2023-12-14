@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import date
 
+# Base Schemas
+
 
 class HotelBase(BaseModel):
     name: str
@@ -10,7 +12,6 @@ class HotelBase(BaseModel):
     contact_info: Optional[str] = None
     amenities: Optional[str] = None
     policies: Optional[str] = None
-    foc_slots: Optional[int] = None
 
 
 class MealOptionBase(BaseModel):
@@ -23,23 +24,19 @@ class MealOptionBase(BaseModel):
 class RoomTypeBase(BaseModel):
     hotel_id: int
     name: str
-    description: Optional[str] = None
     number_of_rooms: Optional[int] = None
-
-
-class RoomRateBase(BaseModel):
-    hotel_id: int
-    room_type_id: int
-    season_id: int
-    rate: float
+    description: Optional[str] = None
 
 
 class OccupancyRateBase(BaseModel):
+    room_type_id: int
+    season_id: int
     occupancy_type: str  # e.g., 'single', 'double'
     rate: float
 
 
 class DivingPackageBase(BaseModel):
+    season_id: int
     name: str
     price: float
     foc_slots: Optional[int] = 0
@@ -72,6 +69,10 @@ class SeasonBase(BaseModel):
     name: str
     start_date: date
     end_date: date
+    hotel_foc_slots: Optional[str] = None
+    diving_foc_slots: Optional[str] = None
+
+# Create Schemas
 
 
 class HotelCreate(HotelBase):
@@ -79,14 +80,26 @@ class HotelCreate(HotelBase):
 
 
 class RoomTypeCreate(RoomTypeBase):
-    hotel_id: int
+    pass
 
 
 class MealOptionCreate(MealOptionBase):
-    hotel_id: int
+    pass
+
+
+class OccupancyRateCreate(OccupancyRateBase):
+    pass
 
 
 class DivingPackageCreate(DivingPackageBase):
+    pass
+
+
+class SpecialOfferCreate(SpecialOfferBase):
+    pass
+
+
+class BookingPolicyCreate(BookingPolicyBase):
     pass
 
 
@@ -94,50 +107,44 @@ class GroupContractCreate(GroupContractBase):
     pass
 
 
+class SeasonCreate(SeasonBase):
+    pass
+
+# Extended Schemas with IDs
+
+
 class OccupancyRate(OccupancyRateBase):
     id: int
 
 
-class RoomRate(RoomRateBase):
-    id: int
-    season_id: int
-
-
 class RoomType(RoomTypeBase):
     id: int
-    hotel_id: int
     occupancy_rates: List[OccupancyRate]
-    room_rates: List[RoomRate]
 
 
 class MealOption(MealOptionBase):
     id: int
-    hotel_id: int
-
-
-class Season(SeasonBase):
-    id: int
-    hotel_id: int
-    room_rates: List[RoomRate]
 
 
 class DivingPackage(DivingPackageBase):
     id: int
 
 
+class Season(SeasonBase):
+    id: int
+    diving_packages: List[DivingPackage]
+
+
 class SpecialOffer(SpecialOfferBase):
     id: int
-    hotel_id: int
 
 
 class BookingPolicy(BookingPolicyBase):
     id: int
-    hotel_id: int
 
 
 class GroupContract(GroupContractBase):
     id: int
-    hotel_id: int
 
 
 class Hotel(HotelBase):
