@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Date
 from sqlalchemy.orm import relationship
-from ..db.base_class import Base
+from app.db.base_class import Base
 
 
 class Hotel(Base):
