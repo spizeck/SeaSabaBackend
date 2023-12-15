@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Float, Date
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, Date, Boolean
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 
@@ -13,12 +13,14 @@ class Hotel(Base):
     contact_info = Column(String, nullable=True)
     amenities = Column(String, nullable=True)
     policies = Column(String, nullable=True)
+    is_active = Column(Boolean, nullable=False, default=True)
 
     meal_options = relationship('MealOption', back_populates='hotel')
     room_types = relationship('RoomType', back_populates='hotel')
     special_offers = relationship('SpecialOffer', back_populates='hotel')
     booking_policies = relationship('BookingPolicy', back_populates='hotel')
     group_contracts = relationship('GroupContract', back_populates='hotel')
+    seasons = relationship('Season', back_populates='hotel')
 
 
 class MealOption(Base):
@@ -66,7 +68,7 @@ class DivingPackage(Base):
     name = Column(String, index=True)
     price = Column(Float)
 
-    seasons = relationship('Season', back_populates='diving_packages')
+    season = relationship('Season', back_populates='diving_packages')
 
 
 class SpecialOffer(Base):

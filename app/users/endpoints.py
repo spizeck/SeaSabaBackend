@@ -9,6 +9,31 @@ from app.core.security import verify_password, create_access_token, get_current_
 router = APIRouter()
 
 
+@router.post("/login", response_model=TokenData, tags=["Authentication"])
+def login_user_endpoint(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+    db_user = get_user_by_username(db, username=form_data.username)
+    if not db_user or not verify_password(form_data.password, db_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token, expire = create_access_token(data={"sub": db_user.username})
+    return {"access_token": access_token, "exp": expire, "token_type": "bearer", "username": db_user.username}
+
+
+@router.post('/token', response_model=TokenData, tags=['Authentication'])
+def generate_access_token(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+    return login_user_endpoint(db=db, form_data=form_data)
+
+
+@router.get("/users/me/", response_model=User, tags=["Authentication"])
+def get_current_user_data(current_user: User = Depends(get_current_user)):
+    if current_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return current_user
+
+
 @router.post("/users/", response_model=User, tags=["User Operations"])
 def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
     # Check if user already exists
@@ -23,26 +48,6 @@ def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
             detail="Username already registered"
         )
     return create_user(db=db, user=user)
-
-
-@router.post("/login", response_model=TokenData, tags=["Authentication"])
-def login_user_endpoint(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
-    db_user = get_user_by_username(db, username=form_data.username)
-    if not db_user or not verify_password(form_data.password, db_user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    access_token, expire = create_access_token(data={"sub": db_user.username})
-    return {"access_token": access_token, "exp": expire, "token_type": "bearer"}
-
-
-@router.get("/users/me/", response_model=User, tags=["User Operations"])
-def get_current_user_data(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    if current_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return current_user
 
 
 @router.get("/users/{user_id}/", response_model=User, tags=["User Operations"])

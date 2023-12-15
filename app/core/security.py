@@ -50,10 +50,9 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = crud.get_user_by_username(db, username=token_data.username)
+    user = crud.get_user_by_username(db, username=username)
     if user is None:
         raise credentials_exception
     return user

@@ -4,8 +4,8 @@ from datetime import date
 
 
 class HotelBase(BaseModel):
-    name: str
-    location: str
+    name: Optional[str] = None
+    location: Optional[str] = None
     description: Optional[str] = None
     contact_info: Optional[str] = None
     amenities: Optional[str] = None
@@ -75,7 +75,7 @@ class SeasonBase(BaseModel):
 
 
 class HotelCreate(HotelBase):
-    pass
+    name: str
 
 
 class RoomTypeCreate(RoomTypeBase):
@@ -154,4 +154,10 @@ class Hotel(HotelBase):
     special_offers: List[SpecialOffer]
     booking_policies: List[BookingPolicy]
     group_contracts: List[GroupContract]
-    seasons: List[Season]
+    is_active: bool
+
+
+# Update Schemas
+
+class HotelUpdate(HotelBase):
+    is_active: Optional[bool] = None

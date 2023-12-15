@@ -7,8 +7,8 @@ def get_hotel(db: Session, hotel_id: int):
     return db.query(models.Hotel).filter(models.Hotel.id == hotel_id).first()
 
 
-def get_hotel_by_name(db: Session, hotel_name: str):
-    return db.query(models.Hotel).filter(models.Hotel.name == hotel_name).first()
+def get_hotel_by_name(db: Session, name: str):
+    return db.query(models.Hotel).filter(models.Hotel.name == name).first()
 
 
 def get_hotels(db: Session, skip: int = 0, limit: int = 100):
@@ -18,6 +18,17 @@ def get_hotels(db: Session, skip: int = 0, limit: int = 100):
 def create_hotel(db: Session, hotel: schemas.HotelCreate):
     db_hotel = models.Hotel(**hotel.model_dump())
     db.add(db_hotel)
+    db.commit()
+    db.refresh(db_hotel)
+    return db_hotel
+
+
+def update_hotel(db: Session, hotel_id: int, hotel_data: schemas.HotelUpdate):
+    db_hotel = db.query(models.Hotel).filter(models.Hotel.id == hotel_id).first()
+    if not db_hotel:
+        return None
+    for var, value in vars(hotel_data).items():
+        setattr(db_hotel, var, value) if value is not None else None
     db.commit()
     db.refresh(db_hotel)
     return db_hotel
@@ -39,6 +50,7 @@ def create_diving_package(db: Session, diving_package: schemas.DivingPackageCrea
     return db_diving_package
 
 
+# noinspection DuplicatedCode
 def get_room_type(db: Session, room_type_id: int):
     return db.query(models.RoomType).filter(models.RoomType.id == room_type_id).first()
 
@@ -55,6 +67,7 @@ def create_room_type(db: Session, room_type: schemas.RoomTypeCreate, hotel_id: i
     return db_room_type
 
 
+# noinspection DuplicatedCode
 def get_meal_option(db: Session, meal_option_id: int):
     return db.query(models.MealOption).filter(models.MealOption.id == meal_option_id).first()
 
@@ -71,6 +84,7 @@ def create_meal_option(db: Session, meal_options: schemas.MealOptionCreate):
     return db_meal_options
 
 
+# noinspection DuplicatedCode
 def get_special_offer(db: Session, special_offer_id: int):
     return db.query(models.SpecialOffer).filter(models.SpecialOffer.id == special_offer_id).first()
 
@@ -88,6 +102,7 @@ def create_special_offer(db: Session, special_offer: schemas.SpecialOfferCreate)
     return db_special_offer
 
 
+# noinspection DuplicatedCode
 def get_booking_policy(db: Session, booking_policy_id: int):
     return db.query(models.BookingPolicy).filter(models.BookingPolicy.id == booking_policy_id).first()
 
@@ -105,6 +120,7 @@ def create_booking_policy(db: Session, booking_policy: schemas.BookingPolicyCrea
     return db_booking_policy
 
 
+# noinspection DuplicatedCode
 def get_season(db: Session, season_id: int):
     return db.query(models.Season).filter(models.Season.id == season_id).first()
 

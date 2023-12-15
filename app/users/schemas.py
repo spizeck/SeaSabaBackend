@@ -14,7 +14,6 @@ class UserCreate(BaseModel):
             raise ValueError('Username must be alphanumeric')
         return v
 
-
     # TODO: Add validation logic for the username and email fields (e.g., length, format, forbidden characters).
 
 
@@ -54,3 +53,5 @@ class User(BaseModel):
 class TokenData(BaseModel):
     username: str
     exp: datetime
+    token_type: str
+    access_token: str
