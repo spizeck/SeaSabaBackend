@@ -7,6 +7,10 @@ def get_hotel(db: Session, hotel_id: int):
     return db.query(models.Hotel).filter(models.Hotel.id == hotel_id).first()
 
 
+def get_hotel_by_name(db: Session, hotel_name: str):
+    return db.query(models.Hotel).filter(models.Hotel.name == hotel_name).first()
+
+
 def get_hotels(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Hotel).offset(skip).limit(limit).all()
 

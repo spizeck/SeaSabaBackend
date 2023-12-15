@@ -3,9 +3,6 @@ from typing import List, Optional
 from datetime import date
 
 
-# Base Schemas
-
-
 class HotelBase(BaseModel):
     name: str
     location: str
