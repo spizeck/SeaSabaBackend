@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from .models import User, UserProfile, UserPreferences
-from .schemas import UserCreate, UpdateUser
+from .schemas import UserCreate, UpdateUser, UpdateUserStatus, TokenData, UserPreferencesBase, UserProfileBase
 from app.core.security import get_password_hash
 
 
@@ -14,6 +14,10 @@ def get_user_by_email(db: Session, email: str):
 
 def get_user_by_username(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
+
+
+def get_users(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(User).offset(skip).limit(limit).all()
 
 
 def create_user(db: Session, user: UserCreate):
@@ -56,6 +60,23 @@ def update_user(db: Session, db_user: User, user_update: UpdateUser):
     if user_update.password is not None:
         db_user.hashed_password = get_password_hash(user_update.password)
 
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
+def update_user_status(db: Session, db_user: User, user_update: UpdateUserStatus):
+    if user_update.is_active is not None:
+        db_user.is_active = user_update.is_active
+    if user_update.is_admin is not None:
+        db_user.is_admin = user_update.is_admin
+
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
+def update_user_profile(db: Session, db_user: User, user_update: UserProfileBase):
     db_profile = db.query(UserProfile).filter(
         UserProfile.user_id == db_user.id).first()
     if not db_profile:
@@ -70,14 +91,20 @@ def update_user(db: Session, db_user: User, user_update: UpdateUser):
     if user_update.company_name is not None:
         db_profile.company_name = user_update.company_name
 
-    db_preferences = db.query(UserPreferences).filter(
-        UserPreferences.user_id == db_user.id).first()
+    db.commit()
+    db.refresh(db_user)
+    db.refresh(db_profile)
+    return db_user
+
+
+def update_user_preferences(db: Session, db_user: User, user_update: UserPreferencesBase):
+    db_preferences = db.query(UserPreferencesBase).filter(
+        UserPreferencesBase.user_id == db_user.id).first()
     if not db_preferences:
-        db_preferences = UserPreferences(user_id=db_user.id)
+        db_preferences = UserPreferencesBase(user_id=db_user.id)
         db.add(db_preferences)
 
     db.commit()
     db.refresh(db_user)
-    db.refresh(db_profile)
     db.refresh(db_preferences)
     return db_user

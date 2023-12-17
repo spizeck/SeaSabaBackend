@@ -3,48 +3,55 @@ from typing import Optional
 from datetime import datetime
 
 
-class UserCreate(BaseModel):
-    username: str
-    email: EmailStr
-    password: str
+class UserBase(BaseModel):
+    username: Optional[str] = None
+    email: Optional[EmailStr] = None
 
     @field_validator('username')
     def username_alphanumeric(cls, v):
-        if not v.isalnum():
-            raise ValueError('Username must be alphanumeric')
+        assert v.isalnum(), 'Username must be alphanumeric'
         return v
 
-    # TODO: Add validation logic for the username and email fields (e.g., length, format, forbidden characters).
+    @field_validator('email')
+    def email_format(cls, v):
+        assert '@' in v, 'Email must be a valid email address'
+        return v
 
 
-class UserProfile(BaseModel):
-    first_name: str
-    last_name: str
-    phone_number: str
-    company_name: str
-
-
-class UserPreferences(BaseModel):
-    pass
-
-
-class UpdateUser(BaseModel):
-    username: Optional[str] = None
-    email: Optional[EmailStr] = None
-    password: Optional[str] = None
+class UserProfileBase(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     phone_number: Optional[str] = None
     company_name: Optional[str] = None
 
 
-class User(BaseModel):
-    id: int
+class UserPreferencesBase(BaseModel):
+    pass
+
+
+class UserCreate(UserBase):
     username: str
     email: EmailStr
+    password: str
+    profile: Optional[UserProfileBase] = None
+    preferences: Optional[UserPreferencesBase] = None
+
+
+class UpdateUser(UserBase):
+    password: Optional[str] = None
+
+
+class UpdateUserStatus(BaseModel):
+    is_active: Optional[bool] = None
+    is_admin: Optional[bool] = None
+
+
+class ReturnUser(UserBase):
+    id: int
     is_active: bool
-    profile: Optional[UserProfile] = None
-    preferences: Optional[UserPreferences] = None
+    is_admin: bool
+    profile: Optional[UserProfileBase] = None
+    preferences: Optional[UserPreferencesBase] = None
 
     class Config:
         from_attributes = True
