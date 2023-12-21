@@ -1,24 +1,39 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Float, Date, Boolean
+from enum import Enum as PyEnum
+from datetime import datetime, timezone
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, Date, Boolean, Enum
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import JSONB
 from app.db.base_class import Base
+
+utc_now = datetime.now(timezone.utc)
+
+
+class OccupancyType(PyEnum):
+    SINGLE = 'single'
+    DOUBLE = 'double'
+    TRIPLE = 'triple'
+    QUADRUPLE = 'quadruple'
 
 
 class Hotel(Base):
     __tablename__ = 'hotels'
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
+    name = Column(String, index=True, nullable=False)
     location = Column(String)
     description = Column(String, nullable=True)
     contact_info = Column(String, nullable=True)
-    amenities = Column(String, nullable=True)
+    amenities = Column(JSONB, nullable=True)
     policies = Column(String, nullable=True)
     is_active = Column(Boolean, nullable=False, default=True)
+    created_at = Column(Date, nullable=False, default=utc_now)
+    updated_at = Column(Date, nullable=False, default=utc_now)
+    is_deleted = Column(Boolean, nullable=False, default=False)
 
-    meal_options = relationship('MealOption', back_populates='hotel')
-    room_types = relationship('RoomType', back_populates='hotel')
-    special_offers = relationship('SpecialOffer', back_populates='hotel')
-    booking_policies = relationship('BookingPolicy', back_populates='hotel')
+    meal_options = relationship('MealOption', back_populates='hotel', cascade='all, delete-orphan')
+    room_types = relationship('RoomType', back_populates='hotel', cascade='all, delete-orphan')
+    special_offers = relationship('SpecialOffer', back_populates='hotel', cascade='all, delete-orphan')
+    booking_policies = relationship('BookingPolicy', back_populates='hotel', cascade='all, delete-orphan')
     group_contracts = relationship('GroupContract', back_populates='hotel')
     seasons = relationship('Season', back_populates='hotel')
 
@@ -28,7 +43,7 @@ class MealOption(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     hotel_id = Column(Integer, ForeignKey('hotels.id'))
-    name = Column(String, index=True)
+    name = Column(String, index=True, nullable=False)
     description = Column(String, nullable=True)
     price = Column(Float)
     hotel = relationship('Hotel', back_populates='meal_options')
@@ -39,7 +54,7 @@ class RoomType(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     hotel_id = Column(Integer, ForeignKey('hotels.id'))
-    name = Column(String, index=True)
+    name = Column(String, index=True, nullable=False)
     number_of_rooms = Column(Integer, nullable=True)
 
     hotel = relationship('Hotel', back_populates='room_types')
@@ -53,8 +68,8 @@ class OccupancyRate(Base):
     id = Column(Integer, primary_key=True, index=True)
     room_type_id = Column(Integer, ForeignKey('room_types.id'))
     season_id = Column(Integer, ForeignKey('seasons.id'))
-    occupancy_type = Column(String)  # e.g., 'single', 'double', etc.
-    rate = Column(Float)
+    occupancy_type = Column(Enum(OccupancyType), nullable=False)
+    rate = Column(Float, nullable=False)
 
     room_type = relationship('RoomType', back_populates='occupancy_rates')
     season = relationship('Season', back_populates='occupancy_rates')
@@ -65,8 +80,8 @@ class DivingPackage(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     season_id = Column(Integer, ForeignKey('seasons.id'))
-    name = Column(String, index=True)
-    price = Column(Float)
+    name = Column(String, index=True, nullable=False)
+    price = Column(Float, nullable=False)
 
     season = relationship('Season', back_populates='diving_packages')
 
@@ -76,8 +91,8 @@ class SpecialOffer(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     hotel_id = Column(Integer, ForeignKey('hotels.id'))
-    name = Column(String, index=True)
-    description = Column(String)
+    name = Column(String, index=True, nullable=False)
+    description = Column(String, nullable=True)
     hotel = relationship('Hotel', back_populates='special_offers')
 
 
@@ -86,7 +101,7 @@ class BookingPolicy(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     hotel_id = Column(Integer, ForeignKey('hotels.id'))
-    name = Column(String, index=True)
+    name = Column(String, index=True, nullable=False)
     policy_text = Column(String)
     hotel = relationship('Hotel', back_populates='booking_policies')
 

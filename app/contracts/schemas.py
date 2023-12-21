@@ -1,8 +1,18 @@
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import date
+from enum import Enum
 
 
+# Enum for OccupancyType
+class OccupancyType(str, Enum):
+    SINGLE = 'single'
+    DOUBLE = 'double'
+    TRIPLE = 'triple'
+    QUADRUPLE = 'quadruple'
+
+
+# Base Models
 class HotelBase(BaseModel):
     name: Optional[str] = None
     location: Optional[str] = None
@@ -23,13 +33,12 @@ class RoomTypeBase(BaseModel):
     hotel_id: int
     name: str
     number_of_rooms: Optional[int] = None
-    description: Optional[str] = None
 
 
 class OccupancyRateBase(BaseModel):
     room_type_id: int
     season_id: int
-    occupancy_type: str  # e.g., 'single', 'double'
+    occupancy_type: OccupancyType
     rate: float
 
 
@@ -37,19 +46,18 @@ class DivingPackageBase(BaseModel):
     season_id: int
     name: str
     price: float
-    foc_slots: Optional[int] = 0
 
 
 class SpecialOfferBase(BaseModel):
     hotel_id: int
     name: str
-    description: str
+    description: Optional[str] = None
 
 
 class BookingPolicyBase(BaseModel):
     hotel_id: int
     name: str
-    policy_text: str
+    policy_text: Optional[str] = None
 
 
 class GroupContractBase(BaseModel):
@@ -59,7 +67,7 @@ class GroupContractBase(BaseModel):
     start_date: date
     end_date: date
     travel_agent: Optional[str] = None
-    contract: str
+    contract: Optional[str] = None
 
 
 class SeasonBase(BaseModel):
@@ -67,22 +75,18 @@ class SeasonBase(BaseModel):
     name: str
     start_date: date
     end_date: date
-    hotel_foc_slots: Optional[str] = None
-    diving_foc_slots: Optional[str] = None
 
 
 # Create Schemas
-
-
 class HotelCreate(HotelBase):
     name: str
 
 
-class RoomTypeCreate(RoomTypeBase):
+class MealOptionCreate(MealOptionBase):
     pass
 
 
-class MealOptionCreate(MealOptionBase):
+class RoomTypeCreate(RoomTypeBase):
     pass
 
 
@@ -111,8 +115,6 @@ class SeasonCreate(SeasonBase):
 
 
 # Extended Schemas with IDs
-
-
 class OccupancyRate(OccupancyRateBase):
     id: int
 
@@ -158,7 +160,6 @@ class Hotel(HotelBase):
 
 
 # Update Schemas
-
 class HotelUpdate(HotelBase):
     is_active: Optional[bool] = None
 
@@ -184,4 +185,12 @@ class SpecialOfferUpdate(SpecialOfferBase):
 
 
 class BookingPolicyUpdate(BookingPolicyBase):
+    pass
+
+
+class GroupContractUpdate(GroupContractBase):
+    pass
+
+
+class SeasonUpdate(SeasonBase):
     pass
