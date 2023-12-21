@@ -120,6 +120,26 @@ def create_booking_policy(db: Session, booking_policy: schemas.BookingPolicyCrea
     return db_booking_policy
 
 
+def update_booking_policy(db: Session, booking_policy: schemas.BookingPolicyUpdate):
+    db_booking_policy = db.query(models.BookingPolicy).filter(models.BookingPolicy.id == booking_policy.id).first()
+    if not db_booking_policy:
+        return None
+    for var, value in vars(booking_policy).items():
+        setattr(db_booking_policy, var, value) if value is not None else None
+    db.commit()
+    db.refresh(db_booking_policy)
+    return db_booking_policy
+
+
+def delete_booking_policy(db: Session, booking_policy_id: int):
+    db_booking_policy = db.query(models.BookingPolicy).filter(models.BookingPolicy.id == booking_policy_id).first()
+    if not db_booking_policy:
+        return None
+    db.delete(db_booking_policy)
+    db.commit()
+    return db_booking_policy
+
+
 # noinspection DuplicatedCode
 def get_season(db: Session, season_id: int):
     return db.query(models.Season).filter(models.Season.id == season_id).first()

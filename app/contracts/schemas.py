@@ -161,3 +161,27 @@ class Hotel(HotelBase):
 
 class HotelUpdate(HotelBase):
     is_active: Optional[bool] = None
+
+
+class RoomTypeUpdate(RoomTypeBase):
+    pass
+
+
+class MealOptionUpdate(MealOptionBase):
+    pass
+
+
+class OccupancyRateUpdate(OccupancyRateBase):
+    pass
+
+
+class DivingPackageUpdate(DivingPackageBase):
+    pass
+
+
+class SpecialOfferUpdate(SpecialOfferBase):
+    pass
+
+
+class BookingPolicyUpdate(BookingPolicyBase):
+    pass
