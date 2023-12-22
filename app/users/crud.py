@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from .models import User, UserProfile, UserPreferences
-from .schemas import UserCreate, UpdateUser, UpdateUserStatus, TokenData, UserPreferencesBase, UserProfileBase
+from .schemas import UserCreate, UpdateUser, UpdateUserStatus, UserPreferencesBase, UserProfileBase
 from app.core.security import get_password_hash
 
 
@@ -26,17 +26,23 @@ def create_user(db: Session, user: UserCreate):
                    hashed_password=hashed_password)
     db.add(db_user)
     db.commit()
-
-    db_profile = UserProfile(user_id=db_user.id)
-    db_preferences = UserPreferences(user_id=db_user.id)
-
-    db.add(db_profile)
-    db.add(db_preferences)
-    db.commit()
-
     db.refresh(db_user)
-    db.refresh(db_profile)
-    db.refresh(db_preferences)
+
+    if user.profile:
+        db_profile = UserProfile(user_id=db_user.id,
+                                 first_name=user.profile.first_name,
+                                 last_name=user.profile.last_name,
+                                 phone_number=user.profile.phone_number,
+                                 company_name=user.profile.company_name)
+        db.add(db_profile)
+        db.commit()
+        db.refresh(db_profile)
+
+    if user.preferences:
+        db_preferences = UserPreferences(user_id=db_user.id)
+        db.add(db_preferences)
+        db.commit()
+        db.refresh(db_preferences)
 
     # TODO: Implement account activation workflow using the is_active field in the User model.
 

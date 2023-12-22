@@ -29,12 +29,20 @@ class UserPreferencesBase(BaseModel):
     pass
 
 
+class UserProfileCreate(UserProfileBase):
+    pass
+
+
+class UserPreferencesCreate(UserPreferencesBase):
+    pass
+
+
 class UserCreate(UserBase):
     username: str
     email: EmailStr
     password: str
-    profile: Optional[UserProfileBase] = None
-    preferences: Optional[UserPreferencesBase] = None
+    profile: Optional[UserProfileCreate] = None
+    preferences: Optional[UserPreferencesCreate] = None
 
 
 class UpdateUser(UserBase):
